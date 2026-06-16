@@ -1,0 +1,10 @@
+{
+  "userId": 1,
+  "firstName": "Nika",
+  "lastName": "Beridze",
+  "personalNumber": "01010101010",
+  "email": "nika@example.com",
+  "phoneNumber": "+995555123456",
+  "status": "Active",
+  "createdAt": "2026-06-16T15:00:00"
+}

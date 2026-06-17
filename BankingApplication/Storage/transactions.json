@@ -1,12 +1,24 @@
 [
   {
-    "transactionId": 10001,
-    "accountId": 1,
-    "currencyCode": "GEL",
-    "transactionType": "CardPayment",
-    "amount": 50.00,
-    "balanceAfter": 2450.50,
-    "description": "Shop payment",
-    "transactionDate": "2026-06-16T16:00:00"
+    "TransactionId": 10001,
+    "AccountId": 1,
+    "Amount": 50.00,
+    "CurrencyCode": "GEL",
+    "TransactionType": "CardPayment",
+    "BalanceAfter": 2450.50,
+    "Status": null,
+    "TransactionDate": "2026-06-16T16:00:00",
+    "Description": "Shop payment"
+  },
+  {
+    "TransactionId": 0,
+    "AccountId": 1,
+    "Amount": 100,
+    "CurrencyCode": "GEL",
+    "TransactionType": "Test",
+    "BalanceAfter": 0,
+    "Status": "Test",
+    "TransactionDate": "2026-06-17T11:36:49.7939134Z",
+    "Description": null
   }
 ]

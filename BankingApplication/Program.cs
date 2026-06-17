@@ -32,21 +32,23 @@ using var loggerFactory = LoggerFactory.Create(builder =>
 
 var programLogger = loggerFactory.CreateLogger<Program>();
 
-var storageLogger = loggerFactory.CreateLogger<JsonStorageProvider>();
-var storageProvider = new JsonStorageProvider(storageLogger);
-var cardRepository = new CardRepository(storageProvider);
-var cardPinRepository = new CardPinRepository(storageProvider);
-var cardPinAttemptRepository = new CardPinAttemptRepository(storageProvider);
-var pinService = new PinService(cardRepository, cardPinRepository, cardPinAttemptRepository);
-var authenticationSessionStore = new AuthenticationSessionStore();
-var authenticationService = new AuthenticationService(cardRepository, pinService, authenticationSessionStore);
-
 #endregion
-
-Console.WriteLine("ATM AUTHENTICATION TEST");
 
 try
 {
+    programLogger.LogInformation("Application started");
+
+    var storageLogger = loggerFactory.CreateLogger<JsonStorageProvider>();
+    var storageProvider = new JsonStorageProvider(storageLogger);
+    var cardRepository = new CardRepository(storageProvider);
+    var cardPinRepository = new CardPinRepository(storageProvider);
+    var cardPinAttemptRepository = new CardPinAttemptRepository(storageProvider);
+    var pinService = new PinService(cardRepository, cardPinRepository, cardPinAttemptRepository);
+    var authenticationSessionStore = new AuthenticationSessionStore();
+    var authenticationService = new AuthenticationService(cardRepository, pinService, authenticationSessionStore);
+
+    Console.WriteLine("ATM AUTHENTICATION TEST");
+
     Console.Write("Enter card number: ");
     var cardNumber = Console.ReadLine() ?? string.Empty;
 
@@ -74,11 +76,17 @@ try
     Console.WriteLine("Authentication successful.");
     Console.WriteLine($"Session ID: {sessionId}");
     Console.WriteLine("The session can be used for one ATM operation.");
+
+    Console.WriteLine("\nTEST FINISHED");
+    Console.ReadLine();
 }
 catch (Exception exception)
 {
-    Console.WriteLine($"Error: {exception.Message}");
+    programLogger.LogError(exception, "Unhandled application error");
+    Console.WriteLine("An unexpected error occurred. Please try again later.");
 }
-
-Console.WriteLine("\nTEST FINISHED");
-Console.ReadLine();
+finally
+{
+    programLogger.LogInformation("Application stopped");
+    Log.CloseAndFlush();
+}

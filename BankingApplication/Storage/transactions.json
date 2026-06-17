@@ -1,0 +1,12 @@
+[
+  {
+    "transactionId": 10001,
+    "accountId": 1,
+    "currencyCode": "GEL",
+    "transactionType": "CardPayment",
+    "amount": 50.00,
+    "balanceAfter": 2450.50,
+    "description": "Shop payment",
+    "transactionDate": "2026-06-16T16:00:00"
+  }
+]

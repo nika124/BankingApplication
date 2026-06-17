@@ -1,0 +1,20 @@
+[
+  {
+    "attemptId": 1,
+    "cardId": 501,
+    "wasSuccessful": false,
+    "attemptedAt": "2026-06-16T15:01:00Z"
+  },
+  {
+    "attemptId": 2,
+    "cardId": 501,
+    "wasSuccessful": false,
+    "attemptedAt": "2026-06-16T15:04:00Z"
+  },
+  {
+    "attemptId": 3,
+    "cardId": 501,
+    "wasSuccessful": false,
+    "attemptedAt": "2026-06-16T15:07:00Z"
+  }
+]

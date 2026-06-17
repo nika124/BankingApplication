@@ -1,0 +1,15 @@
+[
+  {
+    "cardId": 501,
+    "accountId": 1,
+    "cardNumber": "4000000000001234",
+    "displayName": "My Main Card",
+    "cardType": "Debit",
+    "expiryMonth": "08",
+    "expiryYear": "2029",
+    "status": "TemporarilyBlocked",
+    "blockedUntil": "2026-06-19T15:00:00Z",
+    "blockReason": "SuspiciousActivity",
+    "createdAt": "2026-06-16T15:00:00Z"
+  }
+]

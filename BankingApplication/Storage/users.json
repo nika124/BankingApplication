@@ -1,0 +1,20 @@
+[
+  {
+    "UserId": 1,
+    "FirstName": "Nika",
+    "LastName": "Beridze",
+    "PersonalNumber": "01010101010",
+    "Email": "nika@example.com",
+    "PhoneNumber": "\u002B995555123456",
+    "CreatedAt": "2026-06-16T15:00:00"
+  },
+  {
+    "UserId": 999,
+    "FirstName": "Test",
+    "LastName": "User",
+    "PersonalNumber": "99999999999",
+    "Email": "test.user@example.com",
+    "PhoneNumber": "\u002B995555000999",
+    "CreatedAt": "2026-06-17T14:29:16.2883676+04:00"
+  }
+]

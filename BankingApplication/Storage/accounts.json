@@ -1,8 +1,10 @@
-{
-  "accountId": 1,
-  "userId": 1,
-  "accountNumber": "GE00TB0000000000000001",
-  "name": "Main Account",
-  "status": "Active",
-  "createdAt": "2026-06-16T15:00:00"
-}
+[
+  {
+    "accountId": 1,
+    "userId": 1,
+    "iban": "GE00TB0000000000000001",
+    "displayName": "Main Account",
+    "status": "Active",
+    "createdAt": "2026-06-16T15:00:00"
+  }
+]

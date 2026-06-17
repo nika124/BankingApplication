@@ -4,7 +4,12 @@ using System.Text;
 
 namespace BankingApplication.Models
 {
-    internal class CardPin
+    public class CardPin
     {
+        public int CardId { get; set; }
+        public string Pin { get; set; }
+        public DateTime LastChangedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
+
     }
 }

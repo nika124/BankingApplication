@@ -1,10 +1,14 @@
-﻿using System;
+﻿using BankingApplication.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace BankingApplication.Interfaces.Repositories
 {
-    internal interface ICardPinRepository
+    public interface ICardPinRepository : IRepository<CardPin>
     {
+        CardPin? GetCardPin(int cardId);
+        bool Update(CardPin cardPin);
+        bool Delete(int cardId);
     }
 }

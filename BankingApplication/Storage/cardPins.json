@@ -1,6 +1,8 @@
-{
-  "cardId": 501,
-  "pinHash": "$argon2id$stored-hash-value",
-  "changedAt": "2026-06-16T15:00:00",
-  "createdAt": "2026-06-16T15:00:00"
-}
+[
+  {
+    "cardId": 501,
+    "pin": "$argon2id$stored-hash-value",
+    "lastChangedAt": "2026-06-16T15:00:00",
+    "createdAt": "2026-06-16T15:00:00"
+  }
+]

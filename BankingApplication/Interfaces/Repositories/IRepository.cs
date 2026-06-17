@@ -4,7 +4,9 @@ using System.Text;
 
 namespace BankingApplication.Interfaces.Repositories
 {
-    internal interface IRepository
+    public interface IRepository<T> where T : class
     {
+        IReadOnlyList<T> GetAll();
+        void Add(T entity);
     }
 }

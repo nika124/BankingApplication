@@ -4,7 +4,9 @@ using System.Text;
 
 namespace BankingApplication.Interfaces.Services
 {
-    internal interface IPinService
+    public interface IPinService
     {
+        bool ValidatePin(int cardId, string pin);
+        bool ChangePin(int cardId, string newPin);
     }
 }

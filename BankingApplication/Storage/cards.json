@@ -8,7 +8,7 @@
     "cardType": "Debit",
     "expiryMonth": "08",
     "expiryYear": "2029",
-    "status": "TemporarilyBlocked",
+    "status": "Active",
     "blockedUntil": "2026-06-19T15:00:00Z",
     "blockReason": "SuspiciousActivity",
     "createdAt": "2026-06-16T15:00:00Z"

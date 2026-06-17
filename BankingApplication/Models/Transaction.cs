@@ -12,6 +12,7 @@ namespace BankingApplication.Models
         public string CurrencyCode { get; set; }
         public string TransactionType { get; set; }
         public decimal BalanceAfter { get; set; }
+        public string Status { get; set; }
         public DateTime TransactionDate { get; set; }
         public string Description { get; set; }
     }

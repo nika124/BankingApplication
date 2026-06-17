@@ -9,6 +9,7 @@ namespace BankingApplication.Models
         public int CardId { get; set; }
         public int AccountId { get; set; }
         public string CardNumber { get; set; }
+        public string CVC { get; set; }
         public string DisplayName { get; set; }
         public string CardType { get; set; }
         public string ExpiryMonth { get; set; }

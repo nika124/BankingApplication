@@ -1,20 +1,21 @@
 using BankingApplication.Interfaces.Infrastructure;
 using System.Text.Json;
+using Microsoft.Extensions.Logging;
 
 namespace BankingApplication.Infrastructure
 {
     public class JsonStorageProvider : IJsonStorageProvider
     {
-        private readonly ILogger _logger;
         private readonly JsonSerializerOptions _jsonOptions;
+        private readonly ILogger<JsonStorageProvider> _logger;
 
-        public JsonStorageProvider(ILogger logger)
+        public JsonStorageProvider(ILogger<JsonStorageProvider> logger)
         {
             _logger = logger;
             _jsonOptions = new JsonSerializerOptions
             {
-                PropertyNameCaseInsensitive = true,
-                WriteIndented = true
+                WriteIndented = true,
+                PropertyNameCaseInsensitive = true
             };
         }
 
@@ -26,7 +27,6 @@ namespace BankingApplication.Infrastructure
             {
                 if (!File.Exists(resolvedPath))
                 {
-                    _logger.LogError($"File not found: {resolvedPath}", new FileNotFoundException());
                     return new List<T>();
                 }
 
@@ -35,7 +35,6 @@ namespace BankingApplication.Infrastructure
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error reading from file: {resolvedPath}", ex);
                 return new List<T>();
             }
         }
@@ -58,7 +57,6 @@ namespace BankingApplication.Infrastructure
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error writing to file: {resolvedPath}", ex);
             }
         }
 

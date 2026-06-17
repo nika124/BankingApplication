@@ -10,12 +10,10 @@ namespace BankingApplication.Services
 {
     public class TransactionService : ITransactionService
     {
-        private readonly ILogger _logger;
         private readonly ITransactionRepository _transactionRepository;
 
-        public TransactionService(ILogger logger, ITransactionRepository transactionRepository)
+        public TransactionService(ITransactionRepository transactionRepository)
         {
-            _logger = logger;
             _transactionRepository = transactionRepository;
         }
 

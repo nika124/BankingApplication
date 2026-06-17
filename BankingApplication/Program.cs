@@ -1,19 +1,46 @@
 ﻿using BankingApplication.Infrastructure;
 using BankingApplication.Repositories;
 using BankingApplication.Services;
+using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Events;
 
 #region Dependency Setup
-var logger = new FileLogger(Path.Combine("Logs", "errors.txt"));
-var storageProvider = new JsonStorageProvider(logger);
+//Serilog
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .WriteTo.Console()
+    .WriteTo.File(
+        path: "Logs/application-.txt",
+        rollingInterval: RollingInterval.Day,
+        retainedFileCountLimit: 30)
+    .WriteTo.Logger(loggerConfiguration =>
+        loggerConfiguration
+            .Filter.ByIncludingOnly(logEvent =>
+                logEvent.Level >= LogEventLevel.Error)
+            .WriteTo.File(
+                path: "Logs/errors/error-.txt",
+                rollingInterval: RollingInterval.Day,
+                retainedFileCountLimit: 30))
+    .CreateLogger();
+
+using var loggerFactory = LoggerFactory.Create(builder =>
+{
+    builder.ClearProviders();
+    builder.AddSerilog();
+});
+
+var programLogger = loggerFactory.CreateLogger<Program>();
+
+var storageLogger = loggerFactory.CreateLogger<JsonStorageProvider>();
+var storageProvider = new JsonStorageProvider(storageLogger);
 var cardRepository = new CardRepository(storageProvider);
 var cardPinRepository = new CardPinRepository(storageProvider);
 var cardPinAttemptRepository = new CardPinAttemptRepository(storageProvider);
 var pinService = new PinService(cardRepository, cardPinRepository, cardPinAttemptRepository);
 var authenticationSessionStore = new AuthenticationSessionStore();
-var authenticationService = new AuthenticationService(
-    cardRepository,
-    pinService,
-    authenticationSessionStore);
+var authenticationService = new AuthenticationService(cardRepository, pinService, authenticationSessionStore);
+
 #endregion
 
 Console.WriteLine("ATM AUTHENTICATION TEST");

@@ -23,33 +23,23 @@ namespace BankingApplication.Infrastructure
         public List<T> ReadAll<T>(string filePath)
         {
             ValidateFilePath(filePath);
-            var resolvedPath = filePath;
+
+            var resolvedPath = ResolvePath(filePath);
+
+            if (!File.Exists(resolvedPath))
+            {
+                _logger.LogDebug("Storage file not found for {EntityType} at {FilePath}.", typeof(T).Name, resolvedPath);
+                return new List<T>();
+            }
 
             try
             {
-                resolvedPath = ResolvePath(filePath);
-
-                if (!File.Exists(resolvedPath))
-                {
-                    _logger.LogDebug("Storage file not found for {EntityType} at {FilePath}; returning empty collection", typeof(T).Name, resolvedPath);
-
-                    return new List<T>();
-                }
-
                 var json = File.ReadAllText(resolvedPath);
-                var records = JsonSerializer.Deserialize<List<T>>(json, _jsonOptions);
-
-                if (records is null)
-                {
-                    throw new InvalidDataException($"Storage file for {typeof(T).Name} did not contain a JSON array.");
-                }
-
-                return records;
+                return JsonSerializer.Deserialize<List<T>>(json, _jsonOptions) ?? new List<T>();
             }
-            catch (Exception exception)
+            catch (Exception ex) when (ex is not ArgumentException)
             {
-                _logger.LogError(exception, "Failed to read {EntityType} records from {FilePath}", typeof(T).Name, resolvedPath);
-
+                _logger.LogError(ex, "Failed to read {EntityType} records from {FilePath}", typeof(T).Name, resolvedPath);
                 throw;
             }
         }
@@ -57,19 +47,13 @@ namespace BankingApplication.Infrastructure
         public void WriteAll<T>(string filePath, List<T> records)
         {
             ValidateFilePath(filePath);
+            ArgumentNullException.ThrowIfNull(records);
 
-            if (records is null)
-            {
-                throw new ArgumentNullException(nameof(records));
-            }
-
-            var resolvedPath = filePath;
+            var resolvedPath = ResolvePath(filePath);
 
             try
             {
-                resolvedPath = ResolvePath(filePath);
                 var directory = Path.GetDirectoryName(resolvedPath);
-
                 if (!string.IsNullOrWhiteSpace(directory))
                 {
                     Directory.CreateDirectory(directory);
@@ -78,19 +62,16 @@ namespace BankingApplication.Infrastructure
                 var json = JsonSerializer.Serialize(records, _jsonOptions);
                 File.WriteAllText(resolvedPath, json);
             }
-            catch (Exception exception)
+            catch (Exception ex) when (ex is not ArgumentException)
             {
-                _logger.LogError(exception, "Failed to write {EntityType} records to {FilePath}", typeof(T).Name, resolvedPath);
+                _logger.LogError(ex, "Failed to write {EntityType} records to {FilePath}", typeof(T).Name, resolvedPath);
                 throw;
             }
         }
 
         private static void ValidateFilePath(string filePath)
         {
-            if (string.IsNullOrWhiteSpace(filePath))
-            {
-                throw new ArgumentException("File path is required.", nameof(filePath));
-            }
+            ArgumentException.ThrowIfNullOrWhiteSpace(filePath);
         }
 
         private static string ResolvePath(string filePath)

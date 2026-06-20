@@ -13,7 +13,29 @@
     <configurations />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b3f226f7-358a-4f76-b140-292eccd3e8b8" name="Changes" comment="" />
+    <list default="true" id="b3f226f7-358a-4f76-b140-292eccd3e8b8" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/BankingApplication/Models/DTOs/Authentication/PendingAuthenticationDto.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BankingApplication/Models/Requests/Authentication/CompleteAuthenticationRequest.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BankingApplication/Models/Requests/Authentication/StartAuthenticationRequest.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BankingApplication/Models/Results/Authentication/CompleteAuthenticationResult.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BankingApplication/Models/Results/Authentication/StartAuthenticationResult.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BankingApplication/Models/Results/ServiceResult.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.BankingApplication/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.BankingApplication/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BankingApplication/Interfaces/Services/IAuthenticationService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BankingApplication/Interfaces/Services/IAuthenticationService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BankingApplication/Interfaces/Services/IAuthenticationSessionStore.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BankingApplication/Interfaces/Services/IAuthenticationSessionStore.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BankingApplication/Models/Account.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BankingApplication/Models/Entities/Account.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BankingApplication/Models/AccountBalance.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BankingApplication/Models/Entities/AccountBalance.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BankingApplication/Models/AuthenticationSession.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BankingApplication/Models/Entities/AuthenticationSession.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BankingApplication/Models/Card.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BankingApplication/Models/Entities/Card.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BankingApplication/Models/CardPin.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BankingApplication/Models/Entities/CardPin.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BankingApplication/Models/CardPinAttempt.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BankingApplication/Models/Entities/CardPinAttempt.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BankingApplication/Models/PendingAtmAuthentication.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BankingApplication/Models/Entities/PendingAtmAuthentication.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BankingApplication/Models/Transaction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BankingApplication/Models/Entities/Transaction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BankingApplication/Models/User.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BankingApplication/Models/Entities/User.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BankingApplication/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BankingApplication/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BankingApplication/Services/AuthenticationService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BankingApplication/Services/AuthenticationService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BankingApplication/Services/AuthenticationSessionStore.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BankingApplication/Services/AuthenticationSessionStore.cs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -42,7 +64,10 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/BankingApplication/Models/PendingAtmAuthentication.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/BankingApplication/Models/DTOs/Authentication/PendingAuthenticationDto.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/BankingApplication/Models/Results/Authentication/CompleteAuthenticationResult.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/BankingApplication/Models/Results/Authentication/StartAuthenticationResult.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/BankingApplication/Models/Results/ServiceResult.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="McpProjectServerCommands">
     <commands />
@@ -51,65 +76,65 @@
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="6.048990914853069E-39" />
-      <entry key="MS500" value="2.8893021812199514E-8" />
-      <entry key="S2" value="0.033772766441473534" />
-      <entry key="S5" value="0.9308418340777577" />
-      <entry key="S10" value="3.2105434966125395" />
-      <entry key="S30" value="7.835215087357998" />
-      <entry key="S60" value="11.49451308946285" />
-      <entry key="M2" value="18.21171229668925" />
-      <entry key="M5" value="28.94907646745713" />
-      <entry key="M10" value="35.33077937016079" />
-      <entry key="M15" value="39.80902577936063" />
-      <entry key="M30" value="59.13845544734306" />
-      <entry key="H1" value="97.44516240172213" />
-      <entry key="H2" value="138.922863936135" />
-      <entry key="H4" value="169.97973409743605" />
-      <entry key="D1" value="203.34356789071472" />
-      <entry key="W1" value="209.88423383383252" />
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0" />
+      <entry key="S2" value="1.0" />
+      <entry key="S5" value="1.0" />
+      <entry key="S10" value="1.0000000000000933" />
+      <entry key="S30" value="1.0000718201757397" />
+      <entry key="S60" value="1.0119832363346648" />
+      <entry key="M2" value="1.1590593173505737" />
+      <entry key="M5" value="2.3073901156213594" />
+      <entry key="M10" value="9.014987208590316" />
+      <entry key="M15" value="22.82706144818413" />
+      <entry key="M30" value="76.17671853565729" />
+      <entry key="H1" value="163.47739507547053" />
+      <entry key="H2" value="261.43285822226954" />
+      <entry key="H4" value="342.0273546332661" />
+      <entry key="D1" value="436.93418956885273" />
+      <entry key="W1" value="456.60813479192313" />
     </decayedCancelled>
     <decayedSelected>
-      <entry key="MS100" value="1.0000984670116237" />
-      <entry key="MS500" value="1.158000387306601" />
-      <entry key="S2" value="1.6304701622396471" />
-      <entry key="S5" value="1.8315068190631" />
-      <entry key="S10" value="1.9118701431409553" />
-      <entry key="S30" value="1.9825454820746955" />
-      <entry key="S60" value="2.2161747314609466" />
-      <entry key="M2" value="3.034073497759543" />
-      <entry key="M5" value="4.642689038814028" />
-      <entry key="M10" value="5.655800190354571" />
-      <entry key="M15" value="6.220286276238598" />
-      <entry key="M30" value="7.990800298820318" />
-      <entry key="H1" value="11.257406499323512" />
-      <entry key="H2" value="14.797053248459422" />
-      <entry key="H4" value="17.4620701457182" />
-      <entry key="D1" value="20.338215156320413" />
-      <entry key="W1" value="20.903519827433975" />
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="8.69958761032285E-267" />
+      <entry key="S2" value="4.2203455461312974E-67" />
+      <entry key="S5" value="5.0033617155475504E-27" />
+      <entry key="S10" value="1.2071163412860063E-13" />
+      <entry key="S30" value="1.0246799518427649E-4" />
+      <entry key="S60" value="0.017527507925591136" />
+      <entry key="M2" value="0.23251047682680584" />
+      <entry key="M5" value="1.400723133739204" />
+      <entry key="M10" value="3.567680363299083" />
+      <entry key="M15" value="5.763916643888358" />
+      <entry key="M30" value="12.028183440841175" />
+      <entry key="H1" value="21.16778478439636" />
+      <entry key="H2" value="30.921617162003077" />
+      <entry key="H4" value="38.74304369768232" />
+      <entry key="D1" value="47.81250040983735" />
+      <entry key="W1" value="49.678670508487706" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.9582571332271904E-4" />
-      <entry key="MS500" value="0.22913773711758936" />
-      <entry key="S2" value="1.1479358433747937" />
-      <entry key="S5" value="2.4610728303603264" />
-      <entry key="S10" value="4.911964357314456" />
-      <entry key="S30" value="9.711872560380266" />
-      <entry key="S60" value="13.637091657105914" />
-      <entry key="M2" value="21.186650977544797" />
-      <entry key="M5" value="33.5533530661793" />
-      <entry key="M10" value="40.963031028418754" />
-      <entry key="M15" value="46.01188460833752" />
-      <entry key="M30" value="67.11729790663925" />
-      <entry key="H1" value="108.69337614583168" />
-      <entry key="H2" value="153.71355168360674" />
-      <entry key="H4" value="187.43795239211235" />
-      <entry key="D1" value="223.68102047269718" />
-      <entry key="W1" value="230.78764133288573" />
+      <entry key="MS100" value="0.005719084749787598" />
+      <entry key="MS500" value="0.3560125488992679" />
+      <entry key="S2" value="0.772442794979577" />
+      <entry key="S5" value="0.9018753783822496" />
+      <entry key="S10" value="0.9496711948788543" />
+      <entry key="S30" value="0.9831048942995617" />
+      <entry key="S60" value="1.0206426287314427" />
+      <entry key="M2" value="1.3852961393070502" />
+      <entry key="M5" value="3.700803820982095" />
+      <entry key="M10" value="12.572324814821839" />
+      <entry key="M15" value="28.578247929864865" />
+      <entry key="M30" value="88.18931921077808" />
+      <entry key="H1" value="184.63029257582215" />
+      <entry key="H2" value="292.3430441779761" />
+      <entry key="H4" value="380.76302553654665" />
+      <entry key="D1" value="484.7451329955218" />
+      <entry key="W1" value="506.2865731061596" />
     </decayedShown>
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
+    <option name="selectedTabId" value="SWEA" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 6,
@@ -120,27 +145,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Project.BankingApplication.executor&quot;: &quot;Debug&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;feature/service-layer&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Project.BankingApplication.executor": "Debug",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "cidr.known.project.marker": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "feature/core-banking-system",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.keymap",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="BankingApplication" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="" />
@@ -175,7 +200,8 @@
       <workItem from="1781716030611" duration="32000" />
       <workItem from="1781716074893" duration="11205000" />
       <workItem from="1781847837991" duration="2412000" />
-      <workItem from="1781852786890" duration="583000" />
+      <workItem from="1781852786890" duration="2296000" />
+      <workItem from="1781948722452" duration="6593000" />
     </task>
     <servers />
   </component>

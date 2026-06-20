@@ -1,4 +1,5 @@
 ﻿using BankingApplication.Infrastructure;
+using BankingApplication.Models.Requests;
 using BankingApplication.Repositories;
 using BankingApplication.Services;
 using Microsoft.Extensions.Logging;
@@ -7,11 +8,17 @@ using Serilog.Events;
 
 #region Dependency Setup
 //Serilog
+var projectDirectory = FindProjectDirectory();
+var logsDirectory = Path.Combine(projectDirectory, "Logs");
+var errorLogsDirectory = Path.Combine(logsDirectory, "errors");
+
+Directory.CreateDirectory(errorLogsDirectory);
+
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
     .WriteTo.Console()
     .WriteTo.File(
-        path: "Logs/application-.txt",
+        path: Path.Combine(logsDirectory, "application-.txt"),
         rollingInterval: RollingInterval.Day,
         retainedFileCountLimit: 30)
     .WriteTo.Logger(loggerConfiguration =>
@@ -19,7 +26,7 @@ Log.Logger = new LoggerConfiguration()
             .Filter.ByIncludingOnly(logEvent =>
                 logEvent.Level >= LogEventLevel.Error)
             .WriteTo.File(
-                path: "Logs/errors/error-.txt",
+                path: Path.Combine(errorLogsDirectory, "error-.txt"),
                 rollingInterval: RollingInterval.Day,
                 retainedFileCountLimit: 30))
     .CreateLogger();
@@ -45,36 +52,52 @@ try
     var cardPinAttemptRepository = new CardPinAttemptRepository(storageProvider);
     var pinService = new PinService(cardRepository, cardPinRepository, cardPinAttemptRepository);
     var authenticationSessionStore = new AuthenticationSessionStore();
-    var authenticationService = new AuthenticationService(cardRepository, pinService, authenticationSessionStore);
+    var authenticationLogger = loggerFactory.CreateLogger<AuthenticationService>();
+    var authenticationService = new AuthenticationService(
+        cardRepository,
+        pinService,
+        authenticationSessionStore,
+        authenticationLogger);
 
     Console.WriteLine("ATM AUTHENTICATION TEST");
 
     Console.Write("Enter card number: ");
     var cardNumber = Console.ReadLine() ?? string.Empty;
 
-    var authenticationId = authenticationService.StartAtmAuthentication(cardNumber);
+    var startResult = authenticationService.StartAtmAuthentication(
+        new StartAuthenticationRequest { CardNumber = cardNumber });
 
-    if (authenticationId is null)
+    if (!startResult.IsSuccess)
     {
-        Console.WriteLine("Card was not recognized.");
+        Console.WriteLine(startResult.Message);
+        foreach (var error in startResult.Errors.Values)
+            Console.WriteLine(error);
         return;
     }
 
-    Console.WriteLine("Card recognized.");
+    Console.WriteLine(startResult.Message);
+    Console.WriteLine($"Card: {startResult.PendingAuthentication!.MaskedCardNumber}");
 
     Console.Write("Enter PIN: ");
     var pin = Console.ReadLine() ?? string.Empty;
 
-    var sessionId = authenticationService.VerifyAtmPin(authenticationId.Value, pin);
+    var completeResult = authenticationService.CompleteAuthentication(
+        new CompleteAuthenticationRequest
+        {
+            AuthenticationId = startResult.PendingAuthentication.AuthenticationId,
+            Pin = pin
+        });
 
-    if (sessionId is null)
+    if (!completeResult.IsSuccess)
     {
-        Console.WriteLine("Incorrect PIN or authentication failed.");
+        Console.WriteLine(completeResult.Message);
+        foreach (var error in completeResult.Errors.Values)
+            Console.WriteLine(error);
         return;
     }
 
-    Console.WriteLine("Authentication successful.");
-    Console.WriteLine($"Session ID: {sessionId}");
+    Console.WriteLine(completeResult.Message);
+    Console.WriteLine($"Session ID: {completeResult.AuthorizedSession!.SessionId}");
     Console.WriteLine("The session can be used for one ATM operation.");
 
     Console.WriteLine("\nTEST FINISHED");
@@ -89,4 +112,19 @@ finally
 {
     programLogger.LogInformation("Application stopped");
     Log.CloseAndFlush();
+}
+
+static string FindProjectDirectory()
+{
+    var directory = new DirectoryInfo(AppContext.BaseDirectory);
+
+    while (directory is not null)
+    {
+        if (File.Exists(Path.Combine(directory.FullName, "BankingApplication.csproj")))
+            return directory.FullName;
+
+        directory = directory.Parent;
+    }
+
+    return Directory.GetCurrentDirectory();
 }

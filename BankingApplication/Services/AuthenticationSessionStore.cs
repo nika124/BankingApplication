@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using BankingApplication.Interfaces.Services;
 using BankingApplication.Models;
 
@@ -5,11 +6,8 @@ namespace BankingApplication.Services;
 
 public class AuthenticationSessionStore : IAuthenticationSessionStore
 {
-    private readonly Dictionary<Guid, AuthenticationSession> _sessions = new();
-
-    private readonly Dictionary<Guid, PendingAtmAuthentication> _pendingAuthentications = [];
-
-    private readonly Dictionary<Guid, AuthenticationSession> _authorizedSessions = [];
+    private readonly ConcurrentDictionary<Guid, PendingAtmAuthentication> _pendingAuthentications = [];
+    private readonly ConcurrentDictionary<Guid, AuthenticationSession> _authorizedSessions = [];
 
     public Guid CreatePendingAuthentication(
         int cardId,
@@ -23,9 +21,7 @@ public class AuthenticationSessionStore : IAuthenticationSessionStore
             ExpiresAt = DateTime.UtcNow.AddMinutes(2)
         };
 
-        _pendingAuthentications.Add(
-            authentication.AuthenticationId,
-            authentication);
+        _pendingAuthentications[authentication.AuthenticationId] = authentication;
 
         return authentication.AuthenticationId;
     }
@@ -42,17 +38,17 @@ public class AuthenticationSessionStore : IAuthenticationSessionStore
 
         if (authentication.ExpiresAt <= DateTime.UtcNow)
         {
-            _pendingAuthentications.Remove(authenticationId);
+            _pendingAuthentications.TryRemove(authenticationId, out _);
             return null;
         }
 
         return authentication;
     }
 
-    public void RemovePendingAuthentication(
+    public bool RemovePendingAuthentication(
         Guid authenticationId)
     {
-        _pendingAuthentications.Remove(authenticationId);
+        return _pendingAuthentications.TryRemove(authenticationId, out _);
     }
 
     public Guid CreateAuthorizedSession(
@@ -67,9 +63,7 @@ public class AuthenticationSessionStore : IAuthenticationSessionStore
             ExpiresAt = DateTime.UtcNow.AddMinutes(2)
         };
 
-        _authorizedSessions.Add(
-            session.SessionId,
-            session);
+        _authorizedSessions[session.SessionId] = session;
 
         return session.SessionId;
     }
@@ -77,14 +71,12 @@ public class AuthenticationSessionStore : IAuthenticationSessionStore
     public AuthenticationSession? ConsumeAuthorizedSession(
         Guid sessionId)
     {
-        if (!_authorizedSessions.TryGetValue(
+        if (!_authorizedSessions.TryRemove(
                 sessionId,
                 out var session))
         {
             return null;
         }
-
-        _authorizedSessions.Remove(sessionId);
 
         if (session.ExpiresAt <= DateTime.UtcNow)
         {

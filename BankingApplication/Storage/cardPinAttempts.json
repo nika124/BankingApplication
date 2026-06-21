@@ -58,5 +58,29 @@
     "cardId": 501,
     "wasSuccessful": true,
     "attemptedAt": "2026-06-21T18:57:20.715296Z"
+  },
+  {
+    "attemptId": 11,
+    "cardId": 501,
+    "wasSuccessful": true,
+    "attemptedAt": "2026-06-21T19:01:54.917165Z"
+  },
+  {
+    "attemptId": 12,
+    "cardId": 501,
+    "wasSuccessful": true,
+    "attemptedAt": "2026-06-21T19:02:06.190074Z"
+  },
+  {
+    "attemptId": 13,
+    "cardId": 501,
+    "wasSuccessful": true,
+    "attemptedAt": "2026-06-21T19:02:23.108677Z"
+  },
+  {
+    "attemptId": 14,
+    "cardId": 501,
+    "wasSuccessful": true,
+    "attemptedAt": "2026-06-21T19:02:34.274082Z"
   }
 ]

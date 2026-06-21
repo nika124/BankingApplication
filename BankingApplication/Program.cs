@@ -12,7 +12,7 @@ using Serilog.Events;
 
 #region Application path and logging configuration
 
-// Make sure the app always works from the project directory,
+// Make sure the app always works from the project directory.
 var projectDirectory = FindProjectDirectory();
 Directory.SetCurrentDirectory(projectDirectory);
 
@@ -108,51 +108,70 @@ try
     #region ATM flow
 
     Console.WriteLine("Welcome to BankingApplication ATM");
-    Console.WriteLine();
 
-    Console.Write("Enter card number: ");
-    var cardNumber = Console.ReadLine() ?? string.Empty;
+    var shouldKeepRunning = true;
 
-    var startResult = authenticationService.StartAtmAuthentication(
-        new StartAuthenticationRequest
-        {
-            CardNumber = cardNumber
-        });
-
-    if (!PrintResult(startResult))
+    while (shouldKeepRunning)
     {
-        return;
-    }
+        Console.WriteLine();
+        Console.WriteLine("Insert card / start authentication");
+        Console.WriteLine();
 
-    Console.WriteLine($"Card: {startResult.PendingAuthentication!.MaskedCardNumber}");
-    Console.Write("Enter PIN: ");
-    var pin = Console.ReadLine() ?? string.Empty;
+        Console.Write("Enter card number: ");
+        var cardNumber = Console.ReadLine() ?? string.Empty;
 
-    var completeResult = authenticationService.CompleteAuthentication(
-        new CompleteAuthenticationRequest
+        var startResult = authenticationService.StartAtmAuthentication(
+            new StartAuthenticationRequest
+            {
+                CardNumber = cardNumber
+            });
+
+        if (!PrintResult(startResult))
         {
-            SessionId = startResult.PendingAuthentication.SessionId,
-            Pin = pin
-        });
+            Console.WriteLine();
+            Console.WriteLine("Authentication failed. Please try again.");
+            continue;
+        }
 
-    if (!PrintResult(completeResult))
-    {
-        return;
+        Console.WriteLine($"Card: {startResult.PendingAuthentication!.MaskedCardNumber}");
+        Console.Write("Enter PIN: ");
+        var pin = Console.ReadLine() ?? string.Empty;
+
+        var completeResult = authenticationService.CompleteAuthentication(
+            new CompleteAuthenticationRequest
+            {
+                SessionId = startResult.PendingAuthentication.SessionId,
+                Pin = pin
+            });
+
+        if (!PrintResult(completeResult))
+        {
+            Console.WriteLine();
+            Console.WriteLine("PIN verification failed. Please authenticate again.");
+            continue;
+        }
+
+        var activeSessionId = completeResult.ActiveSession!.SessionId;
+
+        var choice = ReadOperationChoice();
+
+        if (choice == "0")
+        {
+            Console.WriteLine();
+            Console.WriteLine("Application closed.");
+            shouldKeepRunning = false;
+            continue;
+        }
+
+        RunSelectedOperation(
+            choice,
+            activeSessionId,
+            accountBalanceService,
+            transactionService);
+
+        Console.WriteLine();
+        Console.WriteLine("Card ejected. Please authenticate again for another operation.");
     }
-
-    var activeSessionId = completeResult.ActiveSession!.SessionId;
-
-    ShowOperationMenu();
-
-    var choice = Console.ReadLine();
-    RunSelectedOperation(
-        choice,
-        activeSessionId,
-        accountBalanceService,
-        transactionService);
-
-    Console.WriteLine();
-    Console.WriteLine("Card ejected. Please authenticate again for another operation.");
 
     #endregion
 }
@@ -182,8 +201,25 @@ static void ShowOperationMenu()
     Console.Write("> ");
 }
 
+static string ReadOperationChoice()
+{
+    while (true)
+    {
+        ShowOperationMenu();
+
+        var choice = Console.ReadLine();
+
+        if (choice is "0" or "1" or "2" or "3" or "4" or "5")
+        {
+            return choice;
+        }
+
+        Console.WriteLine("Invalid operation. Please choose a valid menu number.");
+    }
+}
+
 static void RunSelectedOperation(
-    string? choice,
+    string choice,
     Guid sessionId,
     AccountBalanceService accountBalanceService,
     TransactionService transactionService)
@@ -212,14 +248,6 @@ static void RunSelectedOperation(
 
         case "5":
             ShowLastTransactions(transactionService.GetLastTransactions(sessionId));
-            break;
-
-        case "0":
-            Console.WriteLine("No operation selected.");
-            break;
-
-        default:
-            Console.WriteLine("Invalid operation.");
             break;
     }
 }
@@ -270,6 +298,7 @@ static void RunConversion(
     Console.WriteLine("Convert money");
 
     var fromCurrencyCode = ChooseCurrencyCode("Choose source currency:");
+
     var toCurrencyCode = ChooseCurrencyCode(
         $"Choose target currency for {fromCurrencyCode}:",
         excludedCurrencyCode: fromCurrencyCode);

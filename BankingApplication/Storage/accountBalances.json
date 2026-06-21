@@ -8,13 +8,13 @@
   {
     "accountId": 1,
     "currencyCode": "USD",
-    "balance": 968.52,
-    "updatedAt": "2026-06-21T18:49:16.0029Z"
+    "balance": 868.52,
+    "updatedAt": "2026-06-21T19:02:16.672285Z"
   },
   {
     "accountId": 1,
     "currencyCode": "EUR",
-    "balance": 350.75,
-    "updatedAt": "2026-06-16T15:00:00"
+    "balance": 442.28,
+    "updatedAt": "2026-06-21T19:02:16.672293Z"
   }
 ]

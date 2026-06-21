@@ -64,5 +64,27 @@
     "status": "Completed",
     "transactionDate": "2026-06-21T18:53:31.296153Z",
     "description": "ATM cash deposit"
+  },
+  {
+    "transactionId": 10006,
+    "accountId": 1,
+    "amount": -100,
+    "currencyCode": "USD",
+    "transactionType": "CurrencyConversion",
+    "balanceAfter": 868.52,
+    "status": "Completed",
+    "transactionDate": "2026-06-21T19:02:16.681837Z",
+    "description": "Converted to EUR"
+  },
+  {
+    "transactionId": 10007,
+    "accountId": 1,
+    "amount": 91.53,
+    "currencyCode": "EUR",
+    "transactionType": "CurrencyConversion",
+    "balanceAfter": 442.28,
+    "status": "Completed",
+    "transactionDate": "2026-06-21T19:02:16.683786Z",
+    "description": "Converted from USD"
   }
 ]

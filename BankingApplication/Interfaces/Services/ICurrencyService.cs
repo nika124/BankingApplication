@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using BankingApplication.Models.Results;
 
-namespace BankingApplication.Interfaces.Services
+namespace BankingApplication.Interfaces.Services;
+
+public interface ICurrencyService
 {
-    internal interface ICurrencyService
-    {
-    }
+    ServiceResult GetExchangeRate(string fromCurrencyCode, string toCurrencyCode, out decimal exchangeRate);
+    ServiceResult Convert(decimal amount, string fromCurrencyCode, string toCurrencyCode, out decimal convertedAmount);
 }

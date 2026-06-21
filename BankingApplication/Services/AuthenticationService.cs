@@ -1,4 +1,4 @@
-using BankingApplication.Interfaces.Repositories;
+using BankingApplication.Enums;
 using BankingApplication.Interfaces.Services;
 using BankingApplication.Models;
 using BankingApplication.Models.DTOs.Authentication;
@@ -11,22 +11,23 @@ namespace BankingApplication.Services;
 
 public class AuthenticationService : IAuthenticationService
 {
-    private const string StartFailureMessage = "Authentication could not be started.";
-    private const string CompleteFailureMessage = "Authentication failed.";
+    private const string CardIdKey = "CardId";
+    private const string AccountIdKey = "AccountId";
     private const string SystemErrorMessage = "An unexpected error occurred. Please try again later.";
+    private static readonly TimeSpan PendingSessionLifetime = TimeSpan.FromMinutes(2);
 
-    private readonly ICardRepository _cardRepository;
+    private readonly ICardService _cardService;
     private readonly IPinService _pinService;
     private readonly IAuthenticationSessionStore _sessionStore;
     private readonly ILogger<AuthenticationService> _logger;
 
     public AuthenticationService(
-        ICardRepository cardRepository,
+        ICardService cardService,
         IPinService pinService,
         IAuthenticationSessionStore sessionStore,
         ILogger<AuthenticationService> logger)
     {
-        _cardRepository = cardRepository;
+        _cardService = cardService;
         _pinService = pinService;
         _sessionStore = sessionStore;
         _logger = logger;
@@ -34,220 +35,146 @@ public class AuthenticationService : IAuthenticationService
 
     public StartAuthenticationResult StartAtmAuthentication(StartAuthenticationRequest request)
     {
-        var result = new StartAuthenticationResult { Message = "Card verified. Please enter PIN." };
-        LogStartRequest(request);
+        var result = new StartAuthenticationResult
+        {
+            Message = "Card verified. Please enter PIN."
+        };
+
+        if (request is null)
+        {
+            AddError(result, "Request", "Request is required.");
+            return result;
+        }
 
         try
         {
-            if (!ValidateStartAuthenticationRequest(request, result))
+            var cardResult = _cardService.GetActiveCard(request.CardNumber, out var card);
+            if (!cardResult.IsSuccess || card is null)
             {
-                return LogResponse(nameof(StartAtmAuthentication), result);
+                result.Message = "Authentication could not be started.";
+                result.AddErrors(cardResult.Errors);
+                return result;
             }
 
-            var card = _cardRepository.GetByCardNumber(request.CardNumber);
-            if (!ValidateCard(card, result))
+            var sessionId = _sessionStore.CreateSession(
+                SessionType.Atm,
+                SessionStatus.Pending,
+                PendingSessionLifetime);
+
+            if (!_sessionStore.SetSessionValue(sessionId, CardIdKey, card.CardId.ToString()) ||
+                !_sessionStore.SetSessionValue(sessionId, AccountIdKey, card.AccountId.ToString()))
             {
-                return LogResponse(nameof(StartAtmAuthentication), result);   
+                AddError(result, "SessionId", "Session storage could not be created.");
+                return result;
             }
 
-            CreatePendingAuthentication(card!, result);
+            result.PendingAuthentication = new PendingAuthenticationDto
+            {
+                SessionId = sessionId,
+                MaskedCardNumber = MaskCardNumber(card.CardNumber)
+            };
         }
         catch (Exception exception)
         {
-            AddSystemError(result, StartFailureMessage, exception, nameof(StartAtmAuthentication));
+            _logger.LogError(exception, "Unexpected error while starting authentication");
+            result.Message = "Authentication could not be started.";
+            result.AddError("System", SystemErrorMessage);
         }
 
-        return LogResponse(nameof(StartAtmAuthentication), result);
+        return result;
     }
 
     public CompleteAuthenticationResult CompleteAuthentication(CompleteAuthenticationRequest request)
     {
-        var result = new CompleteAuthenticationResult { Message = "Authentication successful." };
-        LogCompleteRequest(request);
-
-        try
+        var result = new CompleteAuthenticationResult
         {
-            if (!ValidateCompleteAuthenticationRequest(request, result))
-            {
-                return LogResponse(nameof(CompleteAuthentication), result);
-            }
+            Message = "Authentication successful."
+        };
 
-            var pending = GetPendingAuthentication(request!.AuthenticationId, result);
-            if (pending is null)
-            {
-                return LogResponse(nameof(CompleteAuthentication), result);
-            }
-
-            if (!_pinService.ValidatePin(pending.CardId, request.Pin))
-            {
-                return LogResponse(nameof(CompleteAuthentication), AddError(result, "Pin", "Incorrect PIN."));
-            }
-
-            if (!AuthorizeSession(request.AuthenticationId, pending, result))
-            {
-                return LogResponse(nameof(CompleteAuthentication), result);
-            }
-        }
-        catch (Exception exception)
-        {
-            AddSystemError(result, CompleteFailureMessage, exception, nameof(CompleteAuthentication));
-        }
-
-        return LogResponse(nameof(CompleteAuthentication), result);
-    }
-
-    private bool ValidateStartAuthenticationRequest(StartAuthenticationRequest? request, StartAuthenticationResult result)
-    {
         if (request is null)
         {
             AddError(result, "Request", "Request is required.");
-            return false;
+            return result;
         }
 
-        if (!string.IsNullOrWhiteSpace(request.CardNumber))
+        if (request.SessionId == Guid.Empty)
         {
-            return true;
-        }
-
-        AddError(result, "CardNumber", "Card number is required.");
-        return false;
-    }
-
-    private bool ValidateCard(Card? card, StartAuthenticationResult result)
-    {
-        if (card is null)
-        {
-            AddError(result, "Card", "Card was not found.");
-            return false;
-        }
-
-        if (string.Equals(card.Status, "Active", StringComparison.OrdinalIgnoreCase))
-            return true;
-
-        AddError(result, "Card", "This card is not active.");
-        return false;
-    }
-
-    private bool ValidateCompleteAuthenticationRequest(CompleteAuthenticationRequest? request, CompleteAuthenticationResult result)
-    {
-        if (request is null)
-        {
-            AddError(result, "Request", "Request is required.");
-            return false;
-        }
-
-        if (request.AuthenticationId == Guid.Empty)
-        {
-            AddError(result, "AuthenticationId", "Authentication ID is required.");
-            return false;
+            AddError(result, "SessionId", "Session ID is required.");
+            return result;
         }
 
         if (string.IsNullOrWhiteSpace(request.Pin))
         {
             AddError(result, "Pin", "PIN is required.");
-            return false;
+            return result;
         }
 
-        return true;
-    }
-
-    private PendingAtmAuthentication? GetPendingAuthentication(
-        Guid authenticationId,
-        CompleteAuthenticationResult result)
-    {
-        var pending = _sessionStore.GetPendingAuthentication(authenticationId);
-        if (pending != null)
+        try
         {
-            return pending;
+            var pendingSession = _sessionStore.GetPendingSession(request.SessionId, SessionType.Atm);
+            if (pendingSession is null)
+            {
+                AddError(result, "SessionId", "Pending session was not found or expired.");
+                return result;
+            }
+
+            var storage = _sessionStore.GetSessionStorage(request.SessionId);
+            if (storage is null || !TryGetIntValue(storage, CardIdKey, out var cardId))
+            {
+                AddError(result, "SessionId", "Card data was not found in the session.");
+                return result;
+            }
+
+            var pinResult = _pinService.ValidatePin(cardId, request.Pin);
+            if (!pinResult.IsSuccess)
+            {
+                result.Message = "Authentication failed.";
+                result.AddErrors(pinResult.Errors);
+                return result;
+            }
+
+            if (!_sessionStore.ActivateSession(request.SessionId, SessionType.Atm))
+            {
+                AddError(result, "SessionId", "Pending session was not found or expired.");
+                return result;
+            }
+
+            result.ActiveSession = new ActiveSessionDto
+            {
+                SessionId = request.SessionId
+            };
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "Unexpected error while completing authentication");
+            result.Message = "Authentication failed.";
+            result.AddError("System", SystemErrorMessage);
         }
 
-        AddError(result, "Authentication", "Pending authentication was not found or expired.");
-        return null;
-    }
-
-    private void CreatePendingAuthentication(Card card, StartAuthenticationResult result)
-    {
-        var authenticationId = _sessionStore.CreatePendingAuthentication(card.CardId, card.AccountId);
-        var maskedCardNumber = MaskCardNumber(card.CardNumber);
-
-        result.PendingAuthentication = new PendingAuthenticationDto
-        {
-            AuthenticationId = authenticationId,
-            CardId = card.CardId,
-            AccountId = card.AccountId,
-            MaskedCardNumber = maskedCardNumber
-        };
-    }
-
-    private bool AuthorizeSession(
-        Guid authenticationId,
-        PendingAtmAuthentication pending,
-        CompleteAuthenticationResult result)
-    {
-        if (!_sessionStore.RemovePendingAuthentication(authenticationId))
-        {
-            AddError(result, "Authentication", "Pending authentication was not found or expired.");
-            return false;
-        }
-
-        var sessionId = _sessionStore.CreateAuthorizedSession(pending.CardId, pending.AccountId);
-        var card = _cardRepository.GetAll().FirstOrDefault(card => card.CardId == pending.CardId);
-
-        result.AuthorizedSession = new AuthorizedSessionDto
-        {
-            SessionId = sessionId,
-            CardId = pending.CardId,
-            AccountId = pending.AccountId,
-            MaskedCardNumber = card is null ? null : MaskCardNumber(card.CardNumber)
-        };
-
-        return true;
-    }
-
-    private void LogStartRequest(StartAuthenticationRequest? request)
-    {
-        _logger.LogInformation("Authentication request received: {Operation}; Card: {MaskedCardNumber}",
-            nameof(StartAtmAuthentication), MaskCardNumber(request?.CardNumber));
-    }
-
-    private void LogCompleteRequest(CompleteAuthenticationRequest? request)
-    {
-        _logger.LogInformation(
-            "Authentication request received: {Operation}; AuthenticationId: {AuthenticationId}; PIN supplied: {HasPin}",
-            nameof(CompleteAuthentication),
-            request?.AuthenticationId,
-            !string.IsNullOrWhiteSpace(request?.Pin));
-    }
-
-    private T LogResponse<T>(string operation, T result) where T : ServiceResult
-    {
-        _logger.LogInformation(
-            "Authentication response: {Operation}; Success: {IsSuccess}; Message: {Message}; ErrorKeys: {ErrorKeys}; Timestamp: {Timestamp}",
-            operation, result.IsSuccess, result.Message, result.Errors.Keys, DateTime.UtcNow);
         return result;
     }
 
-    private void AddSystemError(ServiceResult result, string failureMessage, Exception exception, string operation)
+    private static bool TryGetIntValue(SessionStorage storage, string key, out int value)
     {
-        _logger.LogError(exception, "Unexpected error during {Operation}", operation);
-        result.Message = failureMessage;
-        result.AddError("System", SystemErrorMessage);
-    }
-
-    private static T AddError<T>(T result, string key, string value) where T : ServiceResult
-    {
-        result.Message = result is StartAuthenticationResult ? StartFailureMessage : CompleteFailureMessage;
-        result.AddError(key, value);
-        return result;
-    }
-
-    private static string MaskCardNumber(string? cardNumber)
-    {
-        if (string.IsNullOrWhiteSpace(cardNumber))
+        if (!storage.Values.TryGetValue(key, out var storedValue))
         {
-            return "Not provided";
+            value = 0;
+            return false;
         }
 
+        return int.TryParse(storedValue, out value);
+    }
+
+    private static void AddError(ServiceResult result, string key, string message)
+    {
+        result.Message = result is StartAuthenticationResult
+            ? "Authentication could not be started."
+            : "Authentication failed.";
+        result.AddError(key, message);
+    }
+
+    private static string MaskCardNumber(string cardNumber)
+    {
         var digits = new string(cardNumber.Where(char.IsDigit).ToArray());
         var lastFour = digits.Length <= 4 ? digits : digits[^4..];
         return $"**** **** **** {lastFour.PadLeft(4, '*')}";

@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using BankingApplication.Models;
+using BankingApplication.Models.Results;
 
-namespace BankingApplication.Interfaces.Services
+namespace BankingApplication.Interfaces.Services;
+
+public interface ICardService
 {
-    internal interface ICardService
-    {
-    }
+    ServiceResult GetActiveCard(string cardNumber, out Card? card);
 }

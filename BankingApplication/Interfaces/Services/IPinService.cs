@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using BankingApplication.Models.Results;
 
-namespace BankingApplication.Interfaces.Services
+namespace BankingApplication.Interfaces.Services;
+
+public interface IPinService
 {
-    public interface IPinService
-    {
-        bool ValidatePin(int cardId, string pin);
-        bool ChangePin(int cardId, string newPin);
-    }
+    ServiceResult ValidatePin(int cardId, string pin);
+    ServiceResult ChangePin(int cardId, string newPin);
 }

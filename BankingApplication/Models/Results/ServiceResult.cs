@@ -10,12 +10,14 @@ public class ServiceResult
 
     public void AddError(string key, string value)
     {
-        _errors.Add(key, value);
+        _errors[key] = value;
     }
 
     public void AddErrors(IReadOnlyDictionary<string, string> errors)
     {
         foreach (var (key, value) in errors)
+        {
             AddError(key, value);
+        }
     }
 }

@@ -1,11 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using BankingApplication.Models.DTOs.Transactions;
+using BankingApplication.Models.Results;
+using BankingApplication.Models.Results.Transactions;
 
-namespace BankingApplication.Interfaces.Services
+namespace BankingApplication.Interfaces.Services;
+
+public interface ITransactionService
 {
-    public interface ITransactionService
-    {
-        bool DepositMoney(string Iban, decimal amount, string currencyCode, string transactionType);
-    }
+    ServiceResult CreateTransaction(
+        int accountId,
+        decimal amount,
+        string currencyCode,
+        string transactionType,
+        decimal balanceAfter,
+        string description,
+        out TransactionDto? transaction);
+
+    ServiceResult GetTransactionsByAccountId(int accountId, out IReadOnlyList<TransactionDto> transactions);
+    LastTransactionsResult GetLastTransactions(Guid sessionId);
 }

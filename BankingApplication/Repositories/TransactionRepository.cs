@@ -23,6 +23,11 @@ namespace BankingApplication.Repositories
                 transaction.TransactionId == transactionId);
         }
 
+        public IReadOnlyList<Transaction> GetByAccountId(int accountId)
+        {
+            return FindMany(transaction => transaction.AccountId == accountId);
+        }
+
         public bool Update(Transaction transaction)
         {
             return UpdateOne(

@@ -1,26 +1,86 @@
-[
+﻿[
   {
-    "AttemptId": 1,
-    "CardId": 501,
-    "WasSuccessful": false,
-    "AttemptedAt": "2026-06-16T15:01:00Z"
+    "attemptId": 1,
+    "cardId": 501,
+    "wasSuccessful": false,
+    "attemptedAt": "2026-06-16T15:01:00Z"
   },
   {
-    "AttemptId": 2,
-    "CardId": 501,
-    "WasSuccessful": false,
-    "AttemptedAt": "2026-06-16T15:04:00Z"
+    "attemptId": 2,
+    "cardId": 501,
+    "wasSuccessful": false,
+    "attemptedAt": "2026-06-16T15:04:00Z"
   },
   {
-    "AttemptId": 3,
-    "CardId": 501,
-    "WasSuccessful": false,
-    "AttemptedAt": "2026-06-16T15:07:00Z"
+    "attemptId": 3,
+    "cardId": 501,
+    "wasSuccessful": false,
+    "attemptedAt": "2026-06-16T15:07:00Z"
   },
   {
-    "AttemptId": 4,
-    "CardId": 501,
-    "WasSuccessful": true,
-    "AttemptedAt": "2026-06-17T17:51:07.88183Z"
+    "attemptId": 4,
+    "cardId": 501,
+    "wasSuccessful": true,
+    "attemptedAt": "2026-06-17T17:51:07.88183Z"
+  },
+  {
+    "attemptId": 5,
+    "cardId": 501,
+    "wasSuccessful": true,
+    "attemptedAt": "2026-06-21T18:48:29.977919Z"
+  },
+  {
+    "attemptId": 6,
+    "cardId": 501,
+    "wasSuccessful": false,
+    "attemptedAt": "2026-06-21T18:48:40.473136Z"
+  },
+  {
+    "attemptId": 7,
+    "cardId": 501,
+    "wasSuccessful": true,
+    "attemptedAt": "2026-06-21T18:48:46.944834Z"
+  },
+  {
+    "attemptId": 8,
+    "cardId": 501,
+    "wasSuccessful": true,
+    "attemptedAt": "2026-06-21T18:49:04.490437Z"
+  },
+  {
+    "attemptId": 9,
+    "cardId": 501,
+    "wasSuccessful": true,
+    "attemptedAt": "2026-06-21T18:53:21.131704Z"
+  },
+  {
+    "attemptId": 10,
+    "cardId": 501,
+    "wasSuccessful": true,
+    "attemptedAt": "2026-06-21T18:57:20.715296Z"
+  },
+  {
+    "attemptId": 11,
+    "cardId": 501,
+    "wasSuccessful": true,
+    "attemptedAt": "2026-06-21T19:01:54.917165Z"
+  },
+  {
+    "attemptId": 12,
+    "cardId": 501,
+    "wasSuccessful": true,
+    "attemptedAt": "2026-06-21T19:02:06.190074Z"
+  },
+  {
+    "attemptId": 13,
+    "cardId": 501,
+    "wasSuccessful": true,
+    "attemptedAt": "2026-06-21T19:02:23.108677Z"
+  },
+  {
+    "attemptId": 14,
+    "cardId": 501,
+    "wasSuccessful": true,
+    "attemptedAt": "2026-06-21T19:02:34.274082Z"
   }
 ]

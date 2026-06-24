@@ -1,20 +1,20 @@
-[
+﻿[
   {
     "accountId": 1,
     "currencyCode": "GEL",
-    "balance": 2500.50,
-    "updatedAt": "2026-06-16T15:00:00"
+    "balance": 2292.17,
+    "updatedAt": "2026-06-21T18:53:31.290268Z"
   },
   {
     "accountId": 1,
     "currencyCode": "USD",
-    "balance": 800.00,
-    "updatedAt": "2026-06-16T15:00:00"
+    "balance": 868.52,
+    "updatedAt": "2026-06-21T19:02:16.672285Z"
   },
   {
     "accountId": 1,
     "currencyCode": "EUR",
-    "balance": 350.75,
-    "updatedAt": "2026-06-16T15:00:00"
+    "balance": 442.28,
+    "updatedAt": "2026-06-21T19:02:16.672293Z"
   }
 ]

@@ -1,24 +1,90 @@
-[
+﻿[
   {
-    "TransactionId": 10001,
-    "AccountId": 1,
-    "Amount": 50.00,
-    "CurrencyCode": "GEL",
-    "TransactionType": "CardPayment",
-    "BalanceAfter": 2450.50,
-    "Status": null,
-    "TransactionDate": "2026-06-16T16:00:00",
-    "Description": "Shop payment"
+    "transactionId": 10001,
+    "accountId": 1,
+    "amount": 50.00,
+    "currencyCode": "GEL",
+    "transactionType": "CardPayment",
+    "balanceAfter": 2450.50,
+    "status": null,
+    "transactionDate": "2026-06-16T16:00:00",
+    "description": "Shop payment"
   },
   {
-    "TransactionId": 0,
-    "AccountId": 1,
-    "Amount": 100,
-    "CurrencyCode": "GEL",
-    "TransactionType": "Test",
-    "BalanceAfter": 0,
-    "Status": "Test",
-    "TransactionDate": "2026-06-17T11:36:49.7939134Z",
-    "Description": null
+    "transactionId": 0,
+    "accountId": 1,
+    "amount": 100,
+    "currencyCode": "GEL",
+    "transactionType": "Test",
+    "balanceAfter": 0,
+    "status": "Test",
+    "transactionDate": "2026-06-17T11:36:49.7939134Z",
+    "description": null
+  },
+  {
+    "transactionId": 10002,
+    "accountId": 1,
+    "amount": 123.67,
+    "currencyCode": "GEL",
+    "transactionType": "Deposit",
+    "balanceAfter": 2624.17,
+    "status": "Completed",
+    "transactionDate": "2026-06-21T18:48:56.623429Z",
+    "description": "ATM cash deposit"
+  },
+  {
+    "transactionId": 10003,
+    "accountId": 1,
+    "amount": -455,
+    "currencyCode": "GEL",
+    "transactionType": "CurrencyConversion",
+    "balanceAfter": 2169.17,
+    "status": "Completed",
+    "transactionDate": "2026-06-21T18:49:16.008667Z",
+    "description": "Converted to USD"
+  },
+  {
+    "transactionId": 10004,
+    "accountId": 1,
+    "amount": 168.52,
+    "currencyCode": "USD",
+    "transactionType": "CurrencyConversion",
+    "balanceAfter": 968.52,
+    "status": "Completed",
+    "transactionDate": "2026-06-21T18:49:16.010226Z",
+    "description": "Converted from GEL"
+  },
+  {
+    "transactionId": 10005,
+    "accountId": 1,
+    "amount": 123,
+    "currencyCode": "GEL",
+    "transactionType": "Deposit",
+    "balanceAfter": 2292.17,
+    "status": "Completed",
+    "transactionDate": "2026-06-21T18:53:31.296153Z",
+    "description": "ATM cash deposit"
+  },
+  {
+    "transactionId": 10006,
+    "accountId": 1,
+    "amount": -100,
+    "currencyCode": "USD",
+    "transactionType": "CurrencyConversion",
+    "balanceAfter": 868.52,
+    "status": "Completed",
+    "transactionDate": "2026-06-21T19:02:16.681837Z",
+    "description": "Converted to EUR"
+  },
+  {
+    "transactionId": 10007,
+    "accountId": 1,
+    "amount": 91.53,
+    "currencyCode": "EUR",
+    "transactionType": "CurrencyConversion",
+    "balanceAfter": 442.28,
+    "status": "Completed",
+    "transactionDate": "2026-06-21T19:02:16.683786Z",
+    "description": "Converted from USD"
   }
 ]

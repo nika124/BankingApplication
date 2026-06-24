@@ -1,8 +1,6 @@
 ﻿using BankingApplication.Interfaces.Infrastructure;
 using BankingApplication.Interfaces.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Collections.Concurrent;
 
 namespace BankingApplication.Repositories
 {
@@ -11,25 +9,24 @@ namespace BankingApplication.Repositories
         private readonly IJsonStorageProvider _storageProvider;
         private readonly string _filePath;
 
-        protected Repository(
-            IJsonStorageProvider storageProvider,
-            string filePath)
+        protected Repository(IJsonStorageProvider storageProvider, string filePath)
         {
-            _storageProvider = storageProvider;
+            _storageProvider = storageProvider ?? throw new ArgumentNullException(nameof(storageProvider));
+            ArgumentException.ThrowIfNullOrWhiteSpace(filePath);
             _filePath = filePath;
         }
 
         public IReadOnlyList<T> GetAll()
         {
-            return Load();
+            return Load().AsReadOnly();
         }
 
         public void Add(T entity)
         {
+            ArgumentNullException.ThrowIfNull(entity);
+
             var records = Load();
-
             records.Add(entity);
-
             Save(records);
         }
 
@@ -40,12 +37,10 @@ namespace BankingApplication.Repositories
 
         protected IReadOnlyList<T> FindMany(Func<T, bool> predicate)
         {
-            return Load().Where(predicate).ToList();
+            return Load().Where(predicate).ToList().AsReadOnly();
         }
 
-        protected bool UpdateOne(
-            Func<T, bool> predicate,
-            T updatedEntity)
+        protected bool UpdateOne(Func<T, bool> predicate, T updatedEntity)
         {
             var records = Load();
             var index = records.FindIndex(record => predicate(record));
@@ -56,7 +51,22 @@ namespace BankingApplication.Repositories
             }
 
             records[index] = updatedEntity;
+            Save(records);
 
+            return true;
+        }
+
+        protected bool UpdateOne(Func<T, bool> predicate, Action<T> updateAction)
+        {
+            var records = Load();
+            var entity = records.FirstOrDefault(predicate);
+
+            if (entity is null)
+            {
+                return false;
+            }
+
+            updateAction(entity);
             Save(records);
 
             return true;
@@ -65,18 +75,32 @@ namespace BankingApplication.Repositories
         protected bool DeleteOne(Func<T, bool> predicate)
         {
             var records = Load();
-            var record = records.FirstOrDefault(predicate);
+            var index = records.FindIndex(record => predicate(record));
 
-            if (record is null)
+            if (index == -1)
             {
                 return false;
             }
 
-            records.Remove(record);
-
+            records.RemoveAt(index);
             Save(records);
 
             return true;
+        }
+
+        protected int DeleteMany(Func<T, bool> predicate)
+        {
+            var records = Load();
+            var removedCount = records.RemoveAll(record => predicate(record));
+
+            if (removedCount == 0)
+            {
+                return 0;
+            }
+
+            Save(records);
+
+            return removedCount;
         }
 
         private List<T> Load()
